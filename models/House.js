@@ -13,7 +13,7 @@ const HouseSchema = new mongoose.Schema({
               var departments = await response.json()
               return departments.some(department => department.name.toUpperCase().includes(state.toUpperCase()));
             },
-            message: props => `${props.value} no es un departamento de Colombia!`
+            message: props => `${props.value} no es un Departamento de Colombia!`
           }
     }
 })
