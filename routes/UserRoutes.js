@@ -2,9 +2,12 @@ const express = require('express');
 const router = express.Router();
 const bcrypt = require('bcrypt');
 const UserSchema = require('../models/User');
+const MessageSchema = require('../models/Message');
 const UserController = require('../controllers/UserController'); //Importando el controllador
 const multer = require('multer');
 const userController = new UserController(); // creando una instancia de ese controlador
+
+
 
 router.get('/user', async (req, res) => {
     //Traer todos los usuarios
@@ -45,6 +48,8 @@ router.post('/user', async (req, res) => {
         }
     })
 })
+
+
 
 router.patch('/user/:id', userController.validateToken, (req, res) => {
     //Actualizar un usuario
