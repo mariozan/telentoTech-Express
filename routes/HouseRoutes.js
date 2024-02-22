@@ -7,7 +7,8 @@ const multer = require('multer');
 router.post('/house', async (req, res) => {
     //Crear un usuario
     let house = HouseSchema({
-        state: req.body.state
+        state: req.body.state,
+        city: req.body.city,
     })
 
     house.save().then((result) => {

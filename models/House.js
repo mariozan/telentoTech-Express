@@ -15,6 +15,19 @@ const HouseSchema = new mongoose.Schema({
             },
             message: props => `${props.value} no es un Departamento de Colombia!`
           }
+    },
+    city: {
+      required: true,
+      type: String,
+      validate: {
+          validator: async function(city) {
+            // Validacion del departamento
+            var response = await fetch('https://api-colombia.com/api/v1/City');
+            var cities = await response.json()
+            return cities.some(object => object.name.toUpperCase().includes(city.toUpperCase()));
+          },
+          message: props => `${props.value} no es una Ciudad de Colombia!`
+        }
     }
 })
 
