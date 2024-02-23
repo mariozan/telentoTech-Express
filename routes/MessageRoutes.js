@@ -4,7 +4,13 @@ const MessageSchema = require('../models/Message');
 
 router.get('/message', async (req, res) => {
     //Traer todos los usuarios
-    let messages = await MessageSchema.find().populate('from').populate('to')    
+    let messages = await MessageSchema.find()
+        .populate({
+            path: 'from',
+            select: '-password'})
+        .populate({
+            path: 'to',
+            select: '-password'})    
     res.json(messages)
 })
 
