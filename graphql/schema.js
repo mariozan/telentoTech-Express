@@ -54,6 +54,14 @@ const UserFilterInput = new GraphQLInputObjectType({
   }
 })
 
+const MessageFilterInput = new GraphQLInputObjectType({
+  name: 'MessageFilterInput',
+  fields: {
+    body: {type: GraphQLString},
+    from: {type: GraphQLString},
+    to: {type: GraphQLString}
+  }
+})
 
 const queries = {
   hello: {
@@ -76,6 +84,24 @@ const queries = {
     resolve: resolvers.UsersByFilter,
     args: {
       filter: { type: UserFilterInput }
+    }
+  },
+  Message: {
+    type: Message,
+    resolve: resolvers.Message,
+    args: {
+      id: {type: GraphQLString}
+    }
+  },
+  Messages: {
+    type: GraphQLList(Message),
+    resolve: resolvers.Messages
+  },
+  MessagesByFilter: {
+    type: GraphQLList(Message),
+    resolve: resolvers.MessagesByFilter,
+    args: {
+      filter: { type: MessageFilterInput }
     }
   }
 }

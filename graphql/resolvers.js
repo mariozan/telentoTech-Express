@@ -1,4 +1,5 @@
 const UserSchema = require('../models/User')
+const MessageSchema = require('../models/Message')
 
 const resolvers = {    
         hello: () => {
@@ -45,7 +46,55 @@ const resolvers = {
                 console.log("Error obteniendo el usuario")
 
             }
-        }
+        },
+        Message: async (_, {id}) => {
+            try {
+                return message = await MessageSchema.findById(id).populate({
+                    path: 'from',
+                    select: '-password'})
+                .populate({
+                    path: 'to',
+                    select: '-password'}) ;
+            }catch(e){
+                console.log()
+            }
+        },
+        Messages: async () => {
+            try{
+                return await MessageSchema.find().populate({
+                    path: 'from',
+                    select: '-password'})
+                .populate({
+                    path: 'to',
+                    select: '-password'});
+            }
+            catch(e){
+                console.log(e)
+            }
+        }, 
+        MessagesByFilter: async (_, {filter}) => {
+            try{
+                let query = {};
+                if(filter){
+                    if(filter.from){
+                        query= {from: filter.from} 
+                    }
+                    if(filter.to){
+                        query = { to: filter.to}
+                    }
+                    if(filter.body){
+                        query.body = { $regex: filter.body, $options: 'i'}
+                    }
+
+                    const message = await MessageSchema.find(query).populate('from')
+                                            .populate('to') 
+                    return message;
+                }
+
+            }catch(e){
+                console.log("Error obteniendo el mensaje")
+            }
+        },
 
 }
 module.exports = resolvers
