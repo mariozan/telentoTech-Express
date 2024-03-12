@@ -12,7 +12,7 @@
             <!-- Aqui van a ir los mensajes -->
         </div>
         <div>
-            <input name="envio-mensajes" id="envio-mensajes" cols="30" rows="10"> <br>
+            <input name="envio-mensajes" id="envio-mensajes" cols="30" rows="10" placeholder="Ingresa un mensaje"> <br>
             <button type="button" id="send">Enviar</button>
         </div>
     </div>
@@ -23,18 +23,18 @@
 
 <script>
 
-    $(document).ready(function(){
+    $(document).ready(() =>{
         /** Aqui implementamos la parte que escucha */
-        var socket = io('http://localhost:3000', {
+        const socket = io('http://localhost:3000', {
             transports: ['websocket']
         })
 
-        socket.on('connect', function(socket){
+        socket.on('connect', (socket) => {
             console.log("connected")
         })
 
         /* Estoy escuchando el evento desde mi pagina web **/
-        socket.on('message-receipt', function(data){            
+        socket.on('message-receipt',(data) =>{            
             addMenssages(data)
         })
 
@@ -42,11 +42,11 @@
 
 
         /** Aqui implementamos la parte que envia */
-        $("#send").click(function(){
+        $("#send").click(() => {
             prepareMessage(socket);
         })
 
-        $("#envio-mensajes").on("keypress", function() {
+        $("#envio-mensajes").on("keypress", () => {
             if (event.which === 13) {
                 prepareMessage(socket);
             }
@@ -69,12 +69,12 @@
         content = $("#envio-mensajes").val();
         console.log(content)
 
-        var payload = {
+        const payload = {
                 "body": content,
                 "from": "65ceb797600b0159e555930f",
                 "to": "65cfefe456bf1d4ec68d497e"
             }
-        var data = JSON.stringify(payload);
+        const data = JSON.stringify(payload);
         
         socket.emit("message", data)
         addMenssages(payload, true)

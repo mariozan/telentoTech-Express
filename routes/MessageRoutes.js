@@ -4,7 +4,7 @@ const MessageSchema = require('../models/Message');
 
 router.get('/message', async (req, res) => {
     //Traer todos los usuarios
-    let messages = await MessageSchema.find()
+    const messages = await MessageSchema.find()
         .populate({
             path: 'from',
             select: '-password'})
@@ -16,7 +16,7 @@ router.get('/message', async (req, res) => {
 
 router.post('/message', async (req, res) => {
     //Crear un usuario
-    let user = MessageSchema({
+    const user = MessageSchema({
         body: req.body.body,
         from: req.body.from,
         to: req.body.to
