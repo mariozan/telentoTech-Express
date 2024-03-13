@@ -1,83 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-</head>
-<body>
-    <div>
-        <h1>Mensajes en tiempo real</h1>
-        <div id="mensajes">
-            <!-- Aqui van a ir los mensajes -->
-        </div>
-        <div>
-            <input name="envio-mensajes" id="envio-mensajes" cols="30" rows="10" placeholder="Ingresa un mensaje"> <br>
-            <button type="button" id="send">Enviar</button>
-        </div>
-    </div>
-</body>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chat</title>
+  </head>
+  <body>
+    <main>
+      <h1>Mensajes en tiempo real</h1>
+      <div id="mensajes">
+        <!-- Aqui van a ir los mensajes -->
+      </div>
+      <div>
+        <input
+          name="envio-mensajes"
+          id="envio-mensajes"
+          cols="30"
+          rows="10"
+          placeholder="Ingresa un mensaje"
+        />
+        <br />
+        <button type="button" id="send">Enviar</button>
+      </div>
+    </main>
+  </body>
 
-<script src="https://cdn.socket.io/4.7.4/socket.io.min.js" integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4" crossorigin="anonymous"></script>
-<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script
+    src="https://cdn.socket.io/4.7.4/socket.io.min.js"
+    integrity="sha384-Gr6Lu2Ajx28mzwyVR8CFkULdCU7kMlZ9UthllibdOSo6qAiN+yXNHqtgdTvFXMT4"
+    crossorigin="anonymous"
+  ></script>
 
-<script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      /** Aquí implementamos la parte que escucha */
+      const socket = io("http://localhost:3000", {
+        transports: ["websocket"],
+      });
 
-    $(document).ready(() =>{
-        /** Aqui implementamos la parte que escucha */
-        const socket = io('http://localhost:3000', {
-            transports: ['websocket']
-        })
+      socket.on("connect", () => {
+        console.log("connected");
+      });
 
-        socket.on('connect', (socket) => {
-            console.log("connected")
-        })
+      /* Estoy escuchando el evento desde mi pagina web **/
+      socket.on("message-receipt", (data) => {
+        addMessages(data);
+      });
 
-        /* Estoy escuchando el evento desde mi pagina web **/
-        socket.on('message-receipt',(data) =>{            
-            addMenssages(data)
-        })
+      /** Aquí finaliza la parte que escucha */
 
-        /** Aqui finaliza la parte que escucha */
+      /** Aquí implementamos la parte que envía */
+      const sendMessage = document.getElementById("send");
+      sendMessage.addEventListener("click", () => {
+        prepareMessage(socket);
+      });
 
-
-        /** Aqui implementamos la parte que envia */
-        $("#send").click(() => {
-            prepareMessage(socket);
-        })
-
-        $("#envio-mensajes").on("keypress", () => {
-            if (event.which === 13) {
-                prepareMessage(socket);
-            }
-        });
-    })
-
-    function addMenssages(data, sender = false){
-        const messageElement = document.createElement('li');
-        messageElement.textContent = data.body
-        if(sender){
-            messageElement.style.color = 'red';
+      const envioMensajes = document.getElementById("envio-mensajes");
+      envioMensajes("envio-mensajes").addEventListener("keypress", (event) => {
+        if (event.which === 13) {
+          prepareMessage(socket);
         }
+      });
+    });
 
-        const messagesDiv = document.getElementById('mensajes')
-        messagesDiv.appendChild(messageElement)
-        $("#envio-mensajes").val("");
-    }
+    // Función para añadir nuevos mensajes
+    const addMessages = (data, sender = false) => {
+      const messageElement = document.createElement("li");
+      messageElement.textContent = data.body;
+      if (sender) {
+        messageElement.style.color = "red";
+      }
 
-    function prepareMessage(socket){
-        content = $("#envio-mensajes").val();
-        console.log(content)
+      const messagesDiv = document.getElementById("mensajes");
+      messagesDiv.appendChild(messageElement);
+      document.getElementById("envio-mensajes").value = "";
+    };
 
-        const payload = {
-                "body": content,
-                "from": "65ceb797600b0159e555930f",
-                "to": "65cfefe456bf1d4ec68d497e"
-            }
-        const data = JSON.stringify(payload);
-        
-        socket.emit("message", data)
-        addMenssages(payload, true)
-    }
-</script>
+    // Función para preparar nuevos mensajes
+    const prepareMessage = (socket) => {
+      const content = document.getElementById("envio-mensajes").value;
+      console.log(content);
+
+      const payload = {
+        body: content,
+        from: "65ceb797600b0159e555930f",
+        to: "65cfefe456bf1d4ec68d497e",
+      };
+      const data = JSON.stringify(payload);
+
+      socket.emit("message", data);
+      addMessages(payload, true);
+    };
+  </script>
 </html>
