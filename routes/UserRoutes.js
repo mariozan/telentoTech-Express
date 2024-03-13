@@ -72,16 +72,16 @@ router.patch('/user/:id', userController.validateToken, (req, res) => {
     })
 })
 
-router.deconste('/user/:id', userController.validateToken, (req, res) => {
+router.delete('/user/:id', userController.validateToken, (req, res) => {
     
     const id = req.params.id
 
     //Puedo establecer cualquier parametro para eliminar
-    UserSchema.deconsteOne({_id: id}).then(() => {
-        res.json({"status": "success", "message": "User deconsted successfully"})
+    UserSchema.deleteOne({_id: id}).then(() => {
+        res.json({"status": "success", "message": "User deleted successfully"})
     }).catch((error) => {
         console.log(error)
-        res.json({"status": "failed", "message": "Error deconsting user"})
+        res.json({"status": "failed", "message": "Error deleting user"})
     })
 
     //Ejemplo 2
@@ -94,11 +94,11 @@ router.deconste('/user/:id', userController.validateToken, (req, res) => {
     //     query = {name: name}
     // }
     // //Puedo establecer cualquier parametro para eliminar
-    //     UserSchema.deconsteOne(query).then(() => {
-    //         res.json({"status": "success", "message": "User deconsted successfully"})
+    //     UserSchema.deleteOne(query).then(() => {
+    //         res.json({"status": "success", "message": "User deleted successfully"})
     //     }).catch((error) => {
     //         console.log(error)
-    //         res.json({"status": "failed", "message": "Error deconsting user"})
+    //         res.json({"status": "failed", "message": "Error deleting user"})
     //     })
 })
 
