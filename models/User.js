@@ -11,7 +11,7 @@ const UserSchema = new mongoose.Schema({
         type: String, 
         required: true,
         validate: {
-            validator: function(name) {
+            validator: (name) => {
               // Expresión regular para validar el formato del correo electrónico              
               return /^[a-zA-ZÀ-ÖØ-öø-ÿ\s]+$/.test(name);
             },
@@ -27,7 +27,7 @@ const UserSchema = new mongoose.Schema({
         required: true,
         unique: true,
         validate: {
-            validator: function(email) {
+            validator: (email) => {
               // Expresión regular para validar el formato del correo electrónico              
               return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
             },

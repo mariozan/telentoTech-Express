@@ -14,7 +14,7 @@ router.get('/departments', (req, res) => {
 
 router.post('/department', (req, res) => {
     fs.readFile('department.json', 'utf8', (err, data) => {
-        var departments = JSON.parse(data)
+        const departments = JSON.parse(data)
         departments.push(req.body)     
         fs.writeFile('department.json', JSON.stringify(departments), (err) => {
             if(err){

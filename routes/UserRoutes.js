@@ -11,14 +11,14 @@ const userController = new UserController(); // creando una instancia de ese con
 
 router.get('/user', async (req, res) => {
     //Traer todos los usuarios
-    let users = await UserSchema.find(); 
+    const users = await UserSchema.find(); 
     res.json(users)
 })
 
 router.get('/user/:id', async (req, res) => {
     //Traer un usuario especifico pasando el ID
-    var id = req.params.id
-    let user = await UserSchema.findById(id); 
+    const id = req.params.id
+    const user = await UserSchema.findById(id); 
     res.json(user)
 
     //Traer un usuario pasandole el email
@@ -30,7 +30,7 @@ router.post('/user', async (req, res) => {
     //Crear un usuario
     const hashedPassword = await bcrypt.hash(req.body.password, 10)
 
-    let user = UserSchema({
+    const user = UserSchema({
         name: req.body.name,
         lastname: req.body.lastname,
         email: req.body.email,
@@ -54,10 +54,10 @@ router.post('/user', async (req, res) => {
 router.patch('/user/:id', userController.validateToken, (req, res) => {
     //Actualizar un usuario
     // Cuando viene por la url del servicio web params
-    var id = req.params.id
+    const id = req.params.id
     
     // Cuando viene por el body se usa body
-    var updateUser = {
+    const updateUser = {
         name: req.body.name,
         lastname: req.body.lastname,
         email: req.body.email,
@@ -74,7 +74,7 @@ router.patch('/user/:id', userController.validateToken, (req, res) => {
 
 router.delete('/user/:id', userController.validateToken, (req, res) => {
     
-    var id = req.params.id
+    const id = req.params.id
 
     //Puedo establecer cualquier parametro para eliminar
     UserSchema.deleteOne({_id: id}).then(() => {
@@ -85,9 +85,9 @@ router.delete('/user/:id', userController.validateToken, (req, res) => {
     })
 
     //Ejemplo 2
-    // var name = req.params.name
-    // var email = req.params.email
-    // var query;
+    // const name = req.params.name
+    // const email = req.params.email
+    // const query;
     // if(email != null){
     //     query = {name: name, email: email}
     // }else{
@@ -117,10 +117,10 @@ router.post('/login', (req, res) => {
 
 //Configuracion de la libreria multer
 const storage = multer.diskStorage({
-    destination: function(req, file, cb){        
+    destination: (req, file, cb) =>{        
         cb(null, 'uploads/')
     },
-    filename: function(req, file, cb){
+    filename: (req, file, cb) =>{
         cb(null, Date.now() + '-' + file.originalname)
     }
 });
@@ -141,15 +141,15 @@ router.post('/upload/:id/user', upload.single('file'), (req, res) => {
         return res.status(400).send({ 'status': 'error', 'message': 'No se proporciono ningun archivo'})
     }
 
-    var id = req.params.id
+    const id = req.params.id
 
-    var updateUser = {
+    const updateUser = {
         avatar: req.file.path
     }
 
     console.log(id)
 
-    UserSchema.findByIdAndUpdate(id, updateUser, {new: true}).then((result) => {
+    UserSchema.findByIdAndUpdate(id, updateUser, {new: true}).then(() => {
         res.send({"status": "success", "message": "Archivo subido correctamente"})
     }).catch((error) => {
         console.log(error)

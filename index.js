@@ -40,7 +40,7 @@ io.on('connect', (socket) => {
     //Escuchando eventos desde el servidor
     socket.on('message', (data) => {
         /** Almacenando el mensaje en la BD */
-        var payload = JSON.parse(data)
+        const payload = JSON.parse(data)
         console.log(payload)
         /** Lo almaceno en la BD */
         MessageSchema(payload).save().then((result) => {
