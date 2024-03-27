@@ -24,9 +24,14 @@ class UserController {
             return { "status": "error", "message": "Contraseña incorrecta"}
         }
 
-        const token = jwt.sign({ userId: user._id, email: user.email, role: "admin" }, this.jwtSecret, { expiresIn: '1h' })
-
-        return {"status": "success", "token": token}
+        const token = jwt.sign({ userId: user._id, 
+                                email: user.email, 
+                                avatar: user.avatar, 
+                                fullname: `${user.name} ${user.lastname}` 
+                }, this.jwtSecret, { expiresIn: '1h' })
+                
+        user.password = null
+        return {"status": "success", "token": token, "user": user}
 
         } catch (error) {
             console.log(error)
