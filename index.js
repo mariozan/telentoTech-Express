@@ -47,7 +47,7 @@ io.on('connect', (socket) => {
         /** Lo almaceno en la BD */
         MessageSchema(payload).save().then((result) => {
             /** Enviando el mensaje a todos los clientes conectados al websocket */
-            socket.broadcast.emit('message-receipt', payload)
+            socket.broadcast.emit('message-receipt', result)
         }).catch((err) => {
             console.log({"status" : "error", "message" :err.message})
         })        
